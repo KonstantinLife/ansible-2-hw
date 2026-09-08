@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Характеристики сервера {{ ansible_hostname }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 500px; }
+        h2 { color: #333; }
+        p { font-size: 16px; margin: 8px 0; }
+        strong { color: #555; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Характеристики хоста: {{ ansible_hostname }}</h2>
+        <hr>
+        <p><strong>IP-адрес:</strong> {{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}</p>
+        <p><strong>CPU:</strong> {{ ansible_processor_vcpus }} vCPU ({{ ansible_processor[2] | default(ansible_processor[1] | default('Processor')) }})</p>
+        <p><strong>RAM:</strong> {{ (ansible_memtotal_mb / 1024) | round(2) }} GB</p>
+        <p><strong>Размер первого HDD:</strong> {{ (ansible_devices | dict2items | selectattr('value.size', 'defined') | first).value.size | default('N/A') }}</p>
+    </div>
+</body>
+</html>

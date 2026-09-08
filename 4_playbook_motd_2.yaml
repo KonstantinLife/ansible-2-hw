@@ -1,0 +1,21 @@
+---
+- name: Conf Motd 
+  hosts: all
+  become: true
+  vars:
+    # Здесь объявляем переменную с текстом приветствия
+    custom_greeting: |
+      Welcome to Linux Matrix
+      Host Name : {{ ansible_hostname }}
+      IP Address: {{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0] | default('127.0.0.1')) }}
+
+      Have a nice day, {{ ansible_user_id }}!
+
+  tasks:
+    - name: Apply custom greetin to /etc/motd
+      ansible.builtin.copy:
+        content: "{{ custom_greeting }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'

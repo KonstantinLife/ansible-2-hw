@@ -1,0 +1,20 @@
+---
+- name: Conf Motd 
+  hosts: all
+  become: true
+  vars:
+    # Здесь объявляем переменную с текстом приветствия
+    custom_greeting: |
+      Welcome to Linux Matrix
+      student: Neo
+      teacher: Morpheus
+      learning_subject: destroy that system
+
+  tasks:
+    - name: Apply custom greetin to /etc/motd
+      ansible.builtin.copy:
+        content: "{{ custom_greeting }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'

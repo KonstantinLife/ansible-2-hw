@@ -1,0 +1,16 @@
+---
+- name: install & conf tuned
+  hosts: all
+  become: true
+  tasks:
+    - name: Install tuned package
+      ansible.builtin.package:
+        name: tuned
+        state: present
+
+    - name: Running & Boot
+    # надо включить его сервис
+      ansible.builtin.service:
+        name: tuned
+        state: started
+        enabled: true

@@ -1,0 +1,27 @@
+---
+- name: 1_playbook_d
+  hosts: all
+  become: true
+  tasks:
+    - name: Destination to our directory
+      ansible.builtin.file:
+      # Укажем путь в opt, как нужно
+        path: /opt/kafka
+        state: directory
+        mode: '0755'
+
+    - name: Download Apache Archive
+      ansible.builtin.get_url:
+      # Архив скачаем и зальем его в папку /tmp
+        url: https://archive.apache.org/dist/kafka/3.7.0/kafka-3.7.0-src.tgz
+        dest: /tmp/kafka.tgz
+        mode: '0644'
+      # Поставим force: True - так как проблема либо с инетом, либо с VPN
+        force: True
+
+    - name: Extract archive && destination
+      ansible.builtin.unarchive:
+      # Теперь распакуем его, в нашу папку как требуется
+        src: /tmp/kafka.tgz
+        dest: /opt/kafka
+        remote_src: true

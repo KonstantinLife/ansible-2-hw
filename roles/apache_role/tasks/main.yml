@@ -1,0 +1,36 @@
+---
+- name: 1. Install Apache web server
+  ansible.builtin.package:
+    name: apache2
+    state: present
+
+- name: 2. Configure index.html from template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: 3. Allow HTTP port 80 in firewall (UFW)
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+  ignore_errors: true
+
+- name: 3. Ensure Apache service is started and enabled
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: true
+
+- name: 4. Check web site availability (Expect HTTP 200)
+  ansible.builtin.command: curl -s -o /dev/null -w "%{http_code}" http://localhost
+  register: webpage_check
+  failed_when: webpage_check.stdout != "200"
+  changed_when: false
+
+- name: Show health check status
+  ansible.builtin.debug:
+    msg: "Web-server is up and running! HTTP status 200 confirmed!"

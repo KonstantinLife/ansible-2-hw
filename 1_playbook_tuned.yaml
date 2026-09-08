@@ -1,0 +1,15 @@
+---
+- name: install & conf tuned
+  hosts: all
+  become: true
+  tasks:
+    - name: Install tuned package
+      ansible.builtin.package:
+        name: tuned
+        state: present
+
+    - name: Ensure tuned service is running and enabled on boot
+      ansible.builtin.service:
+        name: tuned
+        state: started
+        enabled: true

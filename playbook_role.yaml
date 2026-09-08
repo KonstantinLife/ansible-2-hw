@@ -1,0 +1,6 @@
+---
+- name: Deploy and Configure Apache via Role
+  hosts: all
+  become: true
+  roles:
+    - apache_role
